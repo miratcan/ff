@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+#-*- coding:utf-8 -*-
+
 from migraters import FriendFeedHtmlMigration
 from sources import FriendFeedSource
 from localizers import FriendFeedLocalizer
@@ -51,20 +54,25 @@ def main():
         parser.error("Wrong number of arguments")
 
     feed_id = args[0]
-    source = FriendFeedSource(feed_id, fetch_limit=options.fetch_limit)
-    localizer = FriendFeedLocalizer(
+    try:
+        source = FriendFeedSource(feed_id, fetch_limit=options.fetch_limit)
+        localizer = FriendFeedLocalizer(
         feed_id,
         options = {
             "localize_thumbnails": options.localize_thumbnails,
             "localize_images": options.localize_images,
             "localize_attachments": options.localize_attachments
         })
-    localized_data = localizer.run()
-    localized_data_file = file(join(localizer.options['backup_path'], feed_id + ".lfd"), "w")
-    dump(localized_data, localized_data_file)
-    localized_data_file.close()
-    migrater = FriendFeedHtmlMigration()
-    migrater.run(localized_data)
 
+        localized_data = localizer.run()
+        localized_data_file = file(join(localizer.options['backup_path'], feed_id + ".lfd"), "w")
+        dump(localized_data, localized_data_file)
+        localized_data_file.close()
+        migrater = FriendFeedHtmlMigration()
+        migrater.run(localized_data)
+    except Exception,e:
+        print "Geçersiz ID"
+        raise e
+    
 if __name__ == '__main__':
     main()
