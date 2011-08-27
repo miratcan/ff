@@ -70,9 +70,8 @@ def main():
         localized_data_file.close()
         migrater = FriendFeedHtmlMigration()
         migrater.run(localized_data)
-    except Exception,e:
+    except:
         print "Geçersiz ID"
-        raise e
     
 if __name__ == '__main__':
     main()
