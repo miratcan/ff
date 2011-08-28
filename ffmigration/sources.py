@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+#-*- coding:utf-8 -*-
+from urllib2 import HTTPError
 from urllib2 import urlopen
 from urllib import urlencode
 from simplejson import loads, dumps
@@ -25,6 +28,11 @@ class FriendFeedSource(object):
         self.feed_id = feed_id
         self.cursor_at = 0
         self.fetch_limit = fetch_limit
+        try:
+            urlopen("http://friendfeed-api.com/v2/feed/%s" % self.feed_id)
+        except HTTPError:
+            raise HTTPError("Geçersiz ID")
+
         print "Feed collector initialized for %s" % self.feed_id
         print "Ready for fetching %s entries" % (self.fetch_limit or "all")
 
